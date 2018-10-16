@@ -3,6 +3,6 @@
 
 
 ### Usage
-terminal:
-
+##### terminal:
 chmod +x ./compile.sh
+./compile.sh

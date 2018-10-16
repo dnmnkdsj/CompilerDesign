@@ -1,5 +1,5 @@
 %{
-#include "parser.tab.h"
+#include "exp.tab.h"
 #include "string.h"
 #include "def.h"
 int yycolumn=1;
@@ -40,8 +40,8 @@ float  ([0-9]*\.[0-9]+)|([0-9]+\.)
 "-"			{return MINUS;}
 "*"			{return STAR;}
 "/"			{return DIV;}
-"&&"         {return AND;}
-"||"            {return OR;}
+"&&"    {return AND;}
+"||"    {return OR;}
 "!"			{return NOT;}
 "("			{return LP;}
 ")"			{return RP;}
@@ -49,15 +49,14 @@ float  ([0-9]*\.[0-9]+)|([0-9]+\.)
 "}"			{return RC;}
 [\n]           {yycolumn=1;}
 [ \r\t]          {}
-.			{printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}
-/*作为实验内容，还需要考虑识别出2种形式的注释注释部分时，直接舍弃 */
+.			{printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}/*作为实验内容，还需要考虑识别出2种形式的注释注释部分时，直接舍弃 */
+
 %%
 
 /* 和bison联用时，不需要这部分
 void main()
 {
 yylex();
-return 0;
 }
 
 */
