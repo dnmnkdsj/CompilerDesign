@@ -8,6 +8,9 @@ int main() {
     annotation */
     int c = a+b;// this is a single line annotation &*$#
     c = b-a;
+    c = a * b;
+    c = a /b;
+    c = a%b;
   }
   return 0;
 }

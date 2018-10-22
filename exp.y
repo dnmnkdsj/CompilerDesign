@@ -29,8 +29,8 @@ void display(struct node *,int);
 %token <type_float> FLOAT         //指定FLOAT的语义值是type_float，有词法分析得到的标识符字符串
 %token <type_char> CHAR
 
-%token LP RP LC RC SEMI COMMA APOS QUOT   //用bison对该文件编译时，带参数-d，生成的exp.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码
-%token PLUS MINUS STAR DIV ASSIGNOP AND OR NOT IF ELSE WHILE RETURN
+%token LP RP LC RC SEMI COMMA APOS QUOT  //用bison对该文件编译时，带参数-d，生成的exp.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码
+%token PLUS MINUS STAR DIV REM ASSIGNOP AND OR NOT IF ELSE WHILE RETURN
 
 %left ASSIGNOP
 %left OR
@@ -102,6 +102,7 @@ Exp:    Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->typ
       | Exp MINUS Exp {$$=mknode(MINUS,$1,$3,NULL,yylineno);strcpy($$->type_id,"MINUS");}
       | Exp STAR Exp  {$$=mknode(STAR,$1,$3,NULL,yylineno);strcpy($$->type_id,"STAR");}
       | Exp DIV Exp   {$$=mknode(DIV,$1,$3,NULL,yylineno);strcpy($$->type_id,"DIV");}
+      | Exp REM Exp     {$$=mknode(REM,$1,$3,NULL,yylineno);strcpy($$->type_id,"REM");}
       | LP Exp RP     {$$=$2;}
       | MINUS Exp %prec UMINUS   {$$=mknode(UMINUS,$2,NULL,NULL,yylineno);strcpy($$->type_id,"UMINUS");}
       | NOT Exp       {$$=mknode(NOT,$2,NULL,NULL,yylineno);strcpy($$->type_id,"NOT");}

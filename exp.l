@@ -63,6 +63,7 @@ char	('[a-zA-Z]')
 				c = input(); 
 			}
 "/"			{return DIV;}
+"%"			{return REM;}
 "&&"    {return AND;}
 "||"    {return OR;}
 "!"			{return NOT;}
