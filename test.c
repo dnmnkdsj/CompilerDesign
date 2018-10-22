@@ -7,10 +7,19 @@ int main() {
     just a
     annotation */
     int c = a+b;// this is a single line annotation &*$#
-    c = b-a;
-    c = a * b;
-    c = a /b;
-    c = a%b;
+    if (a==b)
+      if (a!=b)
+        if (a>b)
+          if (a>=b)
+            if (a<=b)
+              c = b-a;
+    c ++;
+    c --;
+    c += -b;
+    c -= a * b;
+    c *= a /b;
+    c /= a%b;
+    c %= (a=(b+c));
   }
   return 0;
 }

@@ -30,15 +30,21 @@ void display(struct node *,int);
 %token <type_char> CHAR
 
 %token LP RP LC RC SEMI COMMA APOS QUOT  //用bison对该文件编译时，带参数-d，生成的exp.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码
-%token PLUS MINUS STAR DIV REM ASSIGNOP AND OR NOT IF ELSE WHILE RETURN
+%token PLUS MINUS STAR DIV REM SELPL SELMI ASSIGNOP AND OR NOT IF ELSE WHILE RETURN PLUEQU MINEQU STAEQU DIVEQU REMEQU
 
 %left ASSIGNOP
 %left OR
 %left AND
 %left RELOP
-%left PLUS MINUS
-%left STAR DIV
+%left PLUS MINUS PLUEQU MINEQU
+%left STAR DIV REM STAEQU DIVEQU REMEQU
 %right UMINUS NOT
+
+%nonassoc LOWER_THEN_SELMI
+%nonassoc SELMI
+
+%nonassoc LOWER_THEN_SELPL
+%nonassoc SELPL
 
 %nonassoc LOWER_THEN_ELSE
 %nonassoc ELSE
@@ -95,6 +101,11 @@ Dec:     VarDec  {$$=$1;}
        | VarDec ASSIGNOP Exp  {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}
        ;
 Exp:    Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}//$$结点type_id空置未用，正好存放运算符
+        | Exp PLUEQU Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"PLUEQU");}//$$结点type_id空置未用，正好存放运算符
+        | Exp MINEQU Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"MINEQU");}//$$结点type_id空置未用，正好存放运算符
+        | Exp STAEQU Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"STAEQU");}//$$结点type_id空置未用，正好存放运算符
+        | Exp DIVEQU Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"DIVEQU");}//$$结点type_id空置未用，正好存放运算符
+        | Exp REMEQU Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"REMEQU");}//$$结点type_id空置未用，正好存放运算符
       | Exp AND Exp   {$$=mknode(AND,$1,$3,NULL,yylineno);strcpy($$->type_id,"AND");}
       | Exp OR Exp    {$$=mknode(OR,$1,$3,NULL,yylineno);strcpy($$->type_id,"OR");}
       | Exp RELOP Exp {$$=mknode(RELOP,$1,$3,NULL,yylineno);strcpy($$->type_id,$2);}  //词法分析关系运算符号自身值保存在$2中
@@ -112,6 +123,10 @@ Exp:    Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->typ
       | INT           {$$=mknode(INT,NULL,NULL,NULL,yylineno);$$->type_int=$1;$$->type=INT;}
       | FLOAT         {$$=mknode(FLOAT,NULL,NULL,NULL,yylineno);$$->type_float=$1;$$->type=FLOAT;}
       | CHAR            {$$=mknode(CHAR,NULL,NULL,NULL,yylineno);$$->type_char=$1;$$->type=CHAR;}
+      | Exp SELPL %prec SELPL   {$$=mknode(SELPL,$1,NULL,NULL,yylineno);strcpy($$->type_id,"SELPL");}
+      | Exp SELMI %prec SELMI   {$$=mknode(SELMI,$1,NULL,NULL,yylineno);strcpy($$->type_id,"SELMI");}
+      | SELPL Exp        {$$=mknode(SELPL,$2,NULL,NULL,yylineno);strcpy($$->type_id,"SELPL");}
+      | SELMI Exp        {$$=mknode(SELMI,$2,NULL,NULL,yylineno);strcpy($$->type_id,"SELMI");}
       ;
 Args:    Exp COMMA Args    {$$=mknode(ARGS,$1,$3,NULL,yylineno);}
        | Exp               {$$=mknode(ARGS,$1,NULL,NULL,yylineno);}
