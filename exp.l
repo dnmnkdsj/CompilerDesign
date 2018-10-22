@@ -8,6 +8,7 @@ int yycolumn=1;
 typedef union {
 	int type_int;
 	int type_float;
+	char type_char;
 	char type_id[32];
 	struct node *ptr;
 } YYLVAL;
@@ -19,12 +20,15 @@ typedef union {
 id   [A-Za-z][A-Za-z0-9]*
 int    [0-9]+
 float  ([0-9]*\.[0-9]+)|([0-9]+\.)
+char	('[a-zA-Z]')
 
 %%
 {int}        {yylval.type_int=atoi(yytext); return INT;}
 {float}      {yylval.type_float=atof(yytext); return FLOAT;}
+{char}		{yylval.type_char=yytext[1];printf("Thisis: %s",yytext);return CHAR;}
 "int"        {strcpy(yylval.type_id,  yytext);return TYPE;}
 "float"      {strcpy(yylval.type_id,  yytext);return TYPE;}
+"char"		{strcpy(yylval.type_id, yytext);return TYPE;}
 
 "return"     {return RETURN;}
 "if"         {return IF;}
@@ -66,6 +70,8 @@ float  ([0-9]*\.[0-9]+)|([0-9]+\.)
 ")"			{return RP;}
 "{"			{return LC;}
 "}"			{return RC;}
+"\'"		{printf("meet apos.\n");return APOS;}
+"\""		{printf("meet quot.\n");return QUOT;}
 [\n]           {yycolumn=1;}
 [ \r\t]          {}
 .			{printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}/*作为实验内容，还需要考虑识别出2种形式的注释注释部分时，直接舍弃 */

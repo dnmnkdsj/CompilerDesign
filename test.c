@@ -1,6 +1,7 @@
 int main() {
   int a = 10,b=20;
   float flt = 20;
+  char ch = 'a';
   if (a<b){
     /* this is
     just a
