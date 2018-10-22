@@ -38,7 +38,26 @@ float  ([0-9]*\.[0-9]+)|([0-9]+\.)
 "="			{return ASSIGNOP;}
 "+"			{return PLUS;}
 "-"			{return MINUS;}
+"/*"		{	
+				char c = input();
+				char later;
+				while(later!='/'){
+					if (c!='*'){
+						c = input();
+						continue;
+					}
+					c = input();
+					if(c == '/'){
+						later='/';
+					}
+				}
+			}
 "*"			{return STAR;}
+"//"		{	
+				char c = input();  
+				while (c!='\n') 
+				c = input(); 
+			}
 "/"			{return DIV;}
 "&&"    {return AND;}
 "||"    {return OR;}
