@@ -1,4 +1,5 @@
 int main() {
+  int d[] = {1,2,3,4,5};
   int a = 10,b=20;
   float flt = 20;
   char ch = 'a';

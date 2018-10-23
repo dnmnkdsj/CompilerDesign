@@ -29,7 +29,7 @@ void display(struct node *,int);
 %token <type_float> FLOAT         //指定FLOAT的语义值是type_float，有词法分析得到的标识符字符串
 %token <type_char> CHAR
 
-%token LP RP LC RC SEMI COMMA APOS QUOT  //用bison对该文件编译时，带参数-d，生成的exp.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码
+%token LP RP LC RC SEMI COMMA APOS QUOT LS RS  //用bison对该文件编译时，带参数-d，生成的exp.tab.h中给这些单词进行编码，可在lex.l中包含parser.tab.h使用这些单词种类码
 %token PLUS MINUS STAR DIV REM SELPL SELMI ASSIGNOP AND OR NOT IF ELSE WHILE RETURN PLUEQU MINEQU STAEQU DIVEQU REMEQU
 
 %left ASSIGNOP
@@ -66,6 +66,7 @@ ExtDecList:  VarDec      {$$=$1;}       /*每一个EXT_DECLIST的结点，其第
            | VarDec COMMA ExtDecList {$$=mknode(EXT_DEC_LIST,$1,$3,NULL,yylineno);}
            ;
 VarDec:  ID          {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}   //ID结点，标识符符号串存放结点的type_id
+        | ID LS RS      {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
          ;
 FuncDec: ID LP VarList RP   {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//函数名存放在$$->type_id
         |ID LP  RP   {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//函数名存放在$$->type_id
@@ -127,6 +128,7 @@ Exp:    Exp ASSIGNOP Exp {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->typ
       | Exp SELMI %prec SELMI   {$$=mknode(SELMI,$1,NULL,NULL,yylineno);strcpy($$->type_id,"SELMI");}
       | SELPL Exp        {$$=mknode(SELPL,$2,NULL,NULL,yylineno);strcpy($$->type_id,"SELPL");}
       | SELMI Exp        {$$=mknode(SELMI,$2,NULL,NULL,yylineno);strcpy($$->type_id,"SELMI");}
+      | LC Args RC      {$$=$2;}
       ;
 Args:    Exp COMMA Args    {$$=mknode(ARGS,$1,$3,NULL,yylineno);}
        | Exp               {$$=mknode(ARGS,$1,NULL,NULL,yylineno);}

@@ -74,6 +74,8 @@ char	('[a-zA-Z]')
 "&&"    {return AND;}
 "||"    {return OR;}
 "!"			{return NOT;}
+"["			{return LS;}
+"]"			{return RS;}
 "("			{return LP;}
 ")"			{return RP;}
 "{"			{return LC;}
