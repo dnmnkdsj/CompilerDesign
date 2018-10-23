@@ -17,27 +17,27 @@ typedef union {
 %}
 %option yylineno
 
-id   [A-Za-z][A-Za-z0-9]*
-int    [0-9]+
-float  ([0-9]*\.[0-9]+)|([0-9]+\.)
-char	('[a-zA-Z]')
+id	 		[A-Za-z][A-Za-z0-9]*
+int			[0-9]+
+float		([0-9]*\.[0-9]+)|([0-9]+\.)
+char		('[a-zA-Z]')
 
 %%
-{int}        {yylval.type_int=atoi(yytext); return INT;}
-{float}      {yylval.type_float=atof(yytext); return FLOAT;}
+{int}       {yylval.type_int=atoi(yytext); return INT;}
+{float}     {yylval.type_float=atof(yytext); return FLOAT;}
 {char}		{yylval.type_char=yytext[1];printf("Thisis: %s",yytext);return CHAR;}
-"int"        {strcpy(yylval.type_id,  yytext);return TYPE;}
-"float"      {strcpy(yylval.type_id,  yytext);return TYPE;}
+"int"       {strcpy(yylval.type_id,  yytext);return TYPE;}
+"float"     {strcpy(yylval.type_id,  yytext);return TYPE;}
 "char"		{strcpy(yylval.type_id, yytext);return TYPE;}
 
-"return"     {return RETURN;}
-"if"         {return IF;}
-"else"       {return ELSE;}
-"while"      {return WHILE;}
+"return"   	{return RETURN;}
+"if"        {return IF;}
+"else"      {return ELSE;}
+"while"     {return WHILE;}
 
 "++"		{return SELPL;}
 "--"		{return SELMI;}
-{id}       {strcpy(yylval.type_id,  yytext); return ID;/*由于关键字的形式也符合表示符的规则，所以把关键字的处理全部放在标识符的前面，优先识别*/}
+{id}       	{strcpy(yylval.type_id,  yytext); return ID;/*由于关键字的形式也符合表示符的规则，所以把关键字的处理全部放在标识符的前面，优先识别*/}
 ";"			{return SEMI;}
 ","			{return COMMA;}
 ">"|"<"|">="|"<="|"=="|"!=" {strcpy(yylval.type_id, yytext);;return RELOP;}
@@ -71,8 +71,8 @@ char	('[a-zA-Z]')
 			}
 "/"			{return DIV;}
 "%"			{return REM;}
-"&&"    {return AND;}
-"||"    {return OR;}
+"&&"		{return AND;}
+"||"		{return OR;}
 "!"			{return NOT;}
 "["			{return LS;}
 "]"			{return RS;}
@@ -82,8 +82,8 @@ char	('[a-zA-Z]')
 "}"			{return RC;}
 "\'"		{printf("meet apos.\n");return APOS;}
 "\""		{printf("meet quot.\n");return QUOT;}
-[\n]           {yycolumn=1;}
-[ \r\t]          {}
+[\n]		{yycolumn=1;}
+[ \r\t]		{}
 .			{printf("Error type A :Mysterious character \"%s\"\n\t at Line %d\n",yytext,yylineno);}/*作为实验内容，还需要考虑识别出2种形式的注释注释部分时，直接舍弃 */
 
 %%

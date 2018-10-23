@@ -1,8 +1,8 @@
 int main() {
-  int d[] = {1,2,3,4,5};
   int a = 10,b=20;
   float flt = 20;
   char ch = 'a';
+  int d[] = {1,2,3,4,5};
   if (a<b){
     /* this is
     just a
@@ -14,8 +14,8 @@ int main() {
           if (a>=b)
             if (a<=b)
               c = b-a;
-    c ++;
-    c --;
+    c++;
+    c -- ;
     c += -b;
     c -= a * b;
     c *= a /b;
