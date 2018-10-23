@@ -2,7 +2,9 @@ int main() {
   int a = 10,b=20;
   float flt = 20;
   char ch = 'a';
-  int d[] = {1,2,3,4,5};
+  int d[5] = {1,2,3};
+  char string[6] = {'H','e','l','l','o','\0'};
+  a = d[2];
   if (a<b){
     /* this is
     just a

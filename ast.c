@@ -40,6 +40,12 @@ void display(struct node *T,int indent)  {//对抽象语法树的先根遍历
                                 }
                         else printf("%*c无参函数\n",indent+3,' ');
                         break;
+    case ARRAY_DEC:     printf("%*c数组名：%s\n",indent,' ',T->type_id);
+                        if (T->ptr[0]){
+                            printf("%*c数组角标：\n",indent,' ');
+                            display(T->ptr[0],indent+3);    //显示数组定义的大小或者被调用处
+                        }
+                        break;
 	case PARAM_LIST:    display(T->ptr[0],indent);     //依次显示全部参数类型和名称，
                         display(T->ptr[1],indent);
                         break;

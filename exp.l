@@ -20,15 +20,17 @@ typedef union {
 id	 		[A-Za-z][A-Za-z0-9]*
 int			[0-9]+
 float		([0-9]*\.[0-9]+)|([0-9]+\.)
-char		('[a-zA-Z]')
+char		'.'
 
 %%
+"\'\\0\'"	{yylval.type_char='\0';return CHAR;}
+
 {int}       {yylval.type_int=atoi(yytext); return INT;}
 {float}     {yylval.type_float=atof(yytext); return FLOAT;}
-{char}		{yylval.type_char=yytext[1];printf("Thisis: %s",yytext);return CHAR;}
+{char}		{yylval.type_char=yytext[1];return CHAR;}
 "int"       {strcpy(yylval.type_id,  yytext);return TYPE;}
 "float"     {strcpy(yylval.type_id,  yytext);return TYPE;}
-"char"		{strcpy(yylval.type_id, yytext);return TYPE;}
+"char"		{strcpy(yylval.type_id,  yytext);return TYPE;}
 
 "return"   	{return RETURN;}
 "if"        {return IF;}
@@ -67,7 +69,7 @@ char		('[a-zA-Z]')
 "//"		{	
 				char c = input();  
 				while (c!='\n') 
-				c = input(); 
+					c = input(); 
 			}
 "/"			{return DIV;}
 "%"			{return REM;}

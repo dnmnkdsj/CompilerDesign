@@ -21,7 +21,7 @@ void display(struct node *,int);
 };
 
 //  %type 定义非终结符的语义值类型
-%type  <ptr> program ExtDefList ExtDef  Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args
+%type  <ptr> program ExtDefList ExtDef  Specifier ExtDecList FuncDec CompSt VarList VarDec ParamDec Stmt StmList DefList Def DecList Dec Exp Args ArrayDec
 
 //% token 定义终结符的语义值类型
 %token <type_int> INT              //指定INT的语义值是type_int，有词法分析得到的数值
@@ -58,7 +58,7 @@ ExtDefList: {$$=NULL;}
           ;
 ExtDef:   Specifier ExtDecList SEMI     {$$=mknode(EXT_VAR_DEF,$1,$2,NULL,yylineno);}   //该结点对应一个外部变量声明
          |Specifier FuncDec CompSt      {$$=mknode(FUNC_DEF,$1,$2,$3,yylineno);}         //该结点对应一个函数定义
-         | error SEMI   {$$=NULL; }
+         | error SEMI                   {$$=NULL; }
          ;
 Specifier:  TYPE                {$$=mknode(TYPE,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);$$->type=!strcmp($1,"int")?INT:FLOAT;}
            ;
@@ -66,7 +66,6 @@ ExtDecList:  VarDec             {$$=$1;}       /*每一个EXT_DECLIST的结点�
            | VarDec COMMA ExtDecList    {$$=mknode(EXT_DEC_LIST,$1,$3,NULL,yylineno);}
            ;
 VarDec:  ID                     {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}   //ID结点，标识符符号串存放结点的type_id
-        | ID LS RS              {$$=mknode(ID,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
          ;
 FuncDec: ID LP VarList RP       {$$=mknode(FUNC_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//函数名存放在$$->type_id
         |ID LP  RP              {$$=mknode(FUNC_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}//函数名存放在$$->type_id
@@ -100,7 +99,12 @@ DecList: Dec                    {$$=mknode(DEC_LIST,$1,NULL,NULL,yylineno);}
 	   ;
 Dec:     VarDec  {$$=$1;}
        | VarDec ASSIGNOP Exp    {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}
+       | ArrayDec               {$$=$1;}
+       | ArrayDec ASSIGNOP Exp  {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}
        ;
+ArrayDec:       ID LS Exp RS    {$$=mknode(ARRAY_DEC,$3,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
+                | ID LS RS        {$$=mknode(ARRAY_DEC,NULL,NULL,NULL,yylineno);strcpy($$->type_id,$1);}
+                ;
 Exp:    Exp ASSIGNOP Exp        {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"ASSIGNOP");}//$$结点type_id空置未用，正好存放运算符
         | Exp PLUEQU Exp        {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"PLUEQU");}//$$结点type_id空置未用，正好存放运算符
         | Exp MINEQU Exp        {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy($$->type_id,"MINEQU");}//$$结点type_id空置未用，正好存放运算符
@@ -129,6 +133,7 @@ Exp:    Exp ASSIGNOP Exp        {$$=mknode(ASSIGNOP,$1,$3,NULL,yylineno);strcpy(
         | SELPL Exp             {$$=mknode(SELPL,$2,NULL,NULL,yylineno);strcpy($$->type_id,"SELPL");}
         | SELMI Exp             {$$=mknode(SELMI,$2,NULL,NULL,yylineno);strcpy($$->type_id,"SELMI");}
         | LC Args RC            {$$=$2;}
+        | ArrayDec              {$$=$1;}
         ;
 Args:   Exp COMMA Args          {$$=mknode(ARGS,$1,$3,NULL,yylineno);}
         | Exp                   {$$=mknode(ARGS,$1,NULL,NULL,yylineno);}
